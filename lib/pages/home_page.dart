@@ -50,14 +50,42 @@ class _HomePageState extends State<HomePage> {
             } else {
               final docs = snapshot.data!;
               return ListView.builder(
-                itemBuilder: (context, index) => CheckboxListTile(
-                  title: Text(docs[index].title),
-                  subtitle: Text(docs[index].description),
-                  value: docs[index].isCompleted,
-                  onChanged: (bool? value) {
-                    firebaseServices.toggleTodo(value!, docs[index].id);
-                  },
-                ),
+                itemBuilder: (context, index) {
+                  return CheckboxListTile(
+                    title: Text(docs[index].title),
+                    subtitle: Text(docs[index].description),
+                    value: docs[index].isCompleted,
+                    onChanged: (bool? value) {
+                      firebaseServices.toggleTodo(value!, docs[index].id);
+                    },
+                    secondary: IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Are you sure?'),
+                            content: const Text("This cannot be undone"),
+                            actions: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    firebaseServices.deleteTodo(docs[index].id);
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Yes')),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('No'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.delete),
+                    ),
+                  );
+                },
                 itemCount: docs.length,
               );
             }

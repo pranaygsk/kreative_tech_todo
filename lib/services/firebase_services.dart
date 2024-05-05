@@ -20,4 +20,8 @@ class FirebaseServices {
     });
   }
 
+  void deleteTodo(String id) {
+    db.collection('todos').doc(id).delete();
+  }
+
 }
