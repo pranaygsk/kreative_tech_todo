@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1038767612109",
+    "project_id": "kreative-tech-todo-app",
+    "storage_bucket": "kreative-tech-todo-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038767612109:android:b7e7237f7bc7eecb11c984",
+        "android_client_info": {
+          "package_name": "com.example.kreative_tech_todo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRpqCLfVmDwgcI5a6uwlr0fWqSBg6dUoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
