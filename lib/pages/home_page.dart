@@ -1,19 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:kreative_tech_todo/pages/add_todo_page.dart';
+import 'package:kreative_tech_todo/services/firebase_services.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
-  // List<Todos>
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  var firebaseServices = FirebaseServices();
 
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(title: const Text("Todo List"),centerTitle: true,),
+      appBar: AppBar(
+        title: const Text("Todo List"),
+        centerTitle: true,
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AddTodoPage(),
+            ),
+          );
+        },
+        label: const Text('Add Todo'),
+        icon: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SizedBox(
         width: w,
         height: h,
-        child: ListView.builder(itemBuilder: )
+        child: StreamBuilder(
+          stream: firebaseServices.readTodos(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return const Center(
+                child: Text('Something went wrong!'),
+              );
+            } else {
+              final docs = snapshot.data!;
+              return ListView.builder(
+                itemBuilder: (context, index) => CheckboxListTile(
+                  title: Text(docs[index].title),
+                  subtitle: Text(docs[index].description),
+                  value: docs[index].isCompleted,
+                  onChanged: (bool? value) {
+                    firebaseServices.toggleTodo(value!, docs[index].id);
+                  },
+                ),
+                itemCount: docs.length,
+              );
+            }
+          },
+        ),
       ),
     );
   }
