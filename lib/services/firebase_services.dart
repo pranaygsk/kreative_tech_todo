@@ -5,23 +5,29 @@ import '../models/todo_model.dart';
 class FirebaseServices {
   var db = FirebaseFirestore.instance;
 
-  Stream<List<Todo>> readTodos() => db.collection('todos').snapshots().map((snapshot) => snapshot.docs.map((doc) => Todo.fromJson(doc.data())).toList());
+  Stream<List<Todo>> readTodos() =>
+      db.collection('todos').snapshots().map((snapshot) =>
+          snapshot.docs.map((doc) => Todo.fromJson(doc.data())).toList());
 
-  createTodo(String title,String description) async {
+  createTodo(String title, String description) async {
     final todoRef = db.collection('todos').doc();
-    final todo = Todo(id: todoRef.id,title: title,description: description);
+    final todo = Todo(id: todoRef.id, title: title, description: description);
 
     await todoRef.set(todo.toJson());
   }
 
-  toggleTodo(bool isCompleted,String id){
+  toggleTodo(bool isCompleted, String id) {
+    db.collection('todos').doc(id).update({'isCompleted': isCompleted});
+  }
+
+  updateTodo(String title, String description, String id) {
     db.collection('todos').doc(id).update({
-      'isCompleted' : isCompleted
+      'title': title,
+      'description': description,
     });
   }
 
-  void deleteTodo(String id) {
+  deleteTodo(String id) {
     db.collection('todos').doc(id).delete();
   }
-
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kreative_tech_todo/services/firebase_services.dart';
 
-class AddTodoPage extends StatelessWidget {
-  AddTodoPage({super.key});
+class UpdateTodoPage extends StatelessWidget {
+  UpdateTodoPage({super.key, required this.id, required this.title, required this.description});
+  final String id;
+  final String title;
+  final String description;
 
   final firebaseServices = FirebaseServices();
 
@@ -11,17 +14,14 @@ class AddTodoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    titleController.text = title;
+    descriptionController.text = description;
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        leading: const BackButton(
-          color: Colors.white,
-        ),
-        title: const Text("Add Todo",style: TextStyle(color: Colors.white),),
+        title: const Text('Add Todo'),
         centerTitle: true,
-
-        backgroundColor: Colors.deepPurple,
       ),
       body: Container(
         padding: const EdgeInsets.all(50),
@@ -34,7 +34,6 @@ class AddTodoPage extends StatelessWidget {
             TextField(
               controller: titleController,
               decoration: InputDecoration(
-                label: const Text('Title'),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
                   borderSide: const BorderSide(color: Colors.purple),
@@ -47,7 +46,6 @@ class AddTodoPage extends StatelessWidget {
             TextField(
               controller: descriptionController,
               decoration: InputDecoration(
-                label: const Text('Description'),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
                   borderSide: const BorderSide(color: Colors.purple),
@@ -62,13 +60,14 @@ class AddTodoPage extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    firebaseServices.createTodo(
+                    firebaseServices.updateTodo(
                       titleController.text,
                       descriptionController.text,
+                      id,
                     );
                     Navigator.pop(context);
                   },
-                  child: const Text("Add"),
+                  child: const Text("Update"),
                 ),
                 const SizedBox(
                   width: 15,
@@ -81,56 +80,6 @@ class AddTodoPage extends StatelessWidget {
                 ),
               ],
             ),
-            /*Container(
-              padding: const EdgeInsets.all(25),
-              width: w,
-              height: h / 10,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: Colors.deepPurple)
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Title',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
-                      ),
-                      Text(
-                        'Description',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () {
-                          print("edit");
-                        },
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          print("delete");
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )*/
           ],
         ),
       ),
